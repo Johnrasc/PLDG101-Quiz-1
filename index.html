@@ -1,0 +1,812 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Programming Quiz</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+            text-align: center;
+        }
+        h1 {
+            color: #333;
+        }
+        .quiz-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .question {
+            font-size: 18px;
+            margin-bottom: 15px;
+            text-align: left;
+        }
+        .options {
+            list-style-type: none;
+            padding: 0;
+            text-align: left;
+        }
+        .options li {
+            background-color: #f4f4f4;
+            margin-bottom: 10px;
+            padding: 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .options li.selected {
+            background-color: #d3d3d3;
+        }
+        .options li.correct {
+            background-color: #c8e6c9;
+            color: #2e7d32;
+        }
+        .options li.wrong {
+            background-color: #ffcdd2;
+            color: #c62828;
+        }
+        .options li:hover {
+            background-color: #e0e0e0;
+        }
+        .btn {
+            background-color: #008cba;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-top: 20px;
+        }
+        .btn:hover {
+            background-color: #005f5f;
+        }
+        .result {
+            font-size: 20px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="quiz-container">
+    <h1>PLDG101 Quiz#1</h1>
+    <div id="quiz"></div>
+    <button id="submit" class="btn">Submit</button>
+    <button id="retry" class="btn" style="display:none;">Try Again</button>
+    <div id="result" class="result"></div>
+</div>
+
+<script>
+const quizData = [
+    {
+        question: "What is a computer program?",
+        options: [
+            "A sequential set of instructions written in a computer language.",
+            "A device that can solve problems.",
+            "A collection of data."
+        ],
+        answer: 0
+    },
+    {
+        question: "What is programming?",
+        options: [
+            "Writing machine code in binary.",
+            "The art and science of instructing computers to perform tasks.",
+            "A language that commands a computer."
+        ],
+        answer: 1
+    },
+    {
+        question: "What does a high-level programming language allow you to do?",
+        options: [
+            "Control a computer’s hardware directly.",
+            "Write computer programs with ease.",
+            "Execute binary code."
+        ],
+        answer: 1
+    },
+    {
+        question: "What is pseudocode?",
+        options: [
+            "A programming language.",
+            "A technique used to describe distinct steps of an algorithm.",
+            "A set of grammatical rules."
+        ],
+        answer: 1
+    },
+    {
+        question: "What is a flowchart?",
+        options: [
+            "A type of programming language.",
+            "A diagrammatic representation of an algorithm.",
+            "A command to print text on a screen."
+        ],
+        answer: 1
+    },
+    {
+        question: "What is a programming paradigm?",
+        options: [
+            "A set of grammatical rules for programming.",
+            "A pattern or approach to structuring code.",
+            "A specific type of programming language."
+        ],
+        answer: 1
+    },
+    {
+        question: "Which of the following is a low-level language?",
+        options: [
+            "Python",
+            "C++",
+            "Assembly Language"
+        ],
+        answer: 2
+    },
+    {
+        question: "Which programming paradigm focuses on objects that encapsulate data and behavior?",
+        options: [
+            "Functional Programming",
+            "Object-oriented Programming",
+            "Procedural Programming"
+        ],
+        answer: 1
+    },
+    {
+        question: "What does an interpreter do?",
+        options: [
+            "Converts high-level language to machine code.",
+            "Directly executes instructions in a high-level language.",
+            "Compiles code into an executable file."
+        ],
+        answer: 1
+    },
+    {
+        question: "What is an algorithm?",
+        options: [
+            "A programming language.",
+            "A set of steps to solve a problem.",
+            "A type of software."
+        ],
+        answer: 1
+    },
+    // Additional questions with one-word answers
+    {
+        question: "What type of language is Assembly?",
+        options: [
+            "High-level",
+            "Low-level",
+            "Middle-level"
+        ],
+        answer: 1
+    },
+    {
+        question: "Which type of programming emphasizes functions?",
+        options: [
+            "Procedural",
+            "Object-oriented",
+            "Functional"
+        ],
+        answer: 2
+    },
+    {
+        question: "A flowchart is a ________ representation of an algorithm.",
+        options: [
+            "Textual",
+            "Diagrammatic",
+            "Numerical"
+        ],
+        answer: 1
+    },
+    {
+        question: "The syntax of a programming language defines its ________.",
+        options: [
+            "Speed",
+            "Rules",
+            "Usage"
+        ],
+        answer: 1
+    },
+    {
+        question: "What does IDE stand for?",
+        options: [
+            "Integrated Development Environment",
+            "Intelligent Development Environment",
+            "Internet Development Environment"
+        ],
+        answer: 0
+    },
+    // Traditional test-style questions
+    {
+        question: "What is a program that converts high-level language into machine-readable code?",
+        options: [
+            "Compiler",
+            "Interpreter",
+            "Assembler"
+        ],
+        answer: 0
+    },
+    {
+        question: "What term refers to the practice of organizing code into reusable procedures or functions?",
+        options: [
+            "Procedural Programming",
+            "Object-oriented Programming",
+            "Functional Programming"
+        ],
+        answer: 0
+    },
+    {
+        question: "What is the purpose of an algorithm?",
+        options: [
+            "To create a program",
+            "To solve a problem",
+            "To compile code"
+        ],
+        answer: 1
+    },
+    {
+        question: "Which of the following is an example of a high-level programming language?",
+        options: [
+            "Machine Language",
+            "Python",
+            "Assembly"
+        ],
+        answer: 1
+    },
+    {
+        question: "What is used to describe steps in an algorithm that are easy to understand?",
+        options: [
+            "Syntax",
+            "Flowchart",
+            "Pseudocode"
+        ],
+        answer: 2
+    },
+    {
+        question: "What type of language is Assembly?",
+        options: [
+            "High-level",
+            "Low-level",
+            "Middle-level"
+        ],
+        answer: 1
+    },
+    {
+        question: "Which type of programming emphasizes functions?",
+        options: [
+            "Procedural",
+            "Object-oriented",
+            "Functional"
+        ],
+        answer: 2
+    },
+    {
+        question: "What is the first step in the problem-solving process in programming?",
+        options: [
+            "Execution",
+            "Coding",
+            "Problem Analysis"
+        ],
+        answer: 2
+    },
+    {
+        question: "Which tool represents an algorithm using a pictorial method?",
+        options: [
+            "Flowchart",
+            "Pseudocode",
+            "Compiler"
+        ],
+        answer: 0
+    },
+    {
+        question: "Which of these is NOT a programming paradigm?",
+        options: [
+            "Procedural Programming",
+            "Functional Programming",
+            "Machine Learning"
+        ],
+        answer: 2
+    },
+    {
+        question: "What does machine code consist of?",
+        options: [
+            "Binary instructions",
+            "Text files",
+            "HTML tags"
+        ],
+        answer: 0
+    },
+    {
+        question: "What simplified the coding process after machine code?",
+        options: [
+            "Low-level languages",
+            "High-level programming languages",
+            "Hardware improvements"
+        ],
+        answer: 1
+    },
+    {
+        question: "In Object-Oriented Programming, what encapsulates data and behavior?",
+        options: [
+            "Functions",
+            "Classes",
+            "Objects"
+        ],
+        answer: 2
+    },
+    {
+        question: "Which operator is used to compare two values for equality?",
+        options: [
+            "=",
+            "==",
+            "===" 
+        ],
+        answer: 1
+    },
+    {
+        question: "Which logical operator represents 'and'?",
+        options: [
+            "||",
+            "&&",
+            "!"
+        ],
+        answer: 1
+    },
+    {
+        question: "What is the correct syntax to print a message in most languages?",
+        options: [
+            "print()",
+            "console.log()",
+            "write()"
+        ],
+        answer: 0
+    },
+    {
+        question: "What is the second step in the problem-solving process?",
+        options: [
+            "Execution",
+            "Algorithm Design",
+            "Coding"
+        ],
+        answer: 1
+    },
+    {
+        question: "What verifies whether the algorithm works or not?",
+        options: [
+            "Problem Analysis",
+            "Algorithm Design",
+            "Execution"
+        ],
+        answer: 2
+    },
+    {
+        question: "What is the primary function of an IDE?",
+        options: [
+            "To format, run, and test code",
+            "To store data",
+            "To execute machine code"
+        ],
+        answer: 0
+    },
+    {
+        question: "What does a compiler do?",
+        options: [
+            "Executes high-level code directly.",
+            "Converts high-level languages into machine-readable code.",
+            "Interprets code line by line."
+        ],
+        answer: 1
+    },
+    {
+        question: "Which of these is a high-level language?",
+        options: [
+            "Python",
+            "Assembly Language",
+            "Machine Language"
+        ],
+        answer: 0
+    },
+    {
+        question: "What is the primary purpose of an algorithm?",
+        options: [
+            "To solve problems through a series of steps",
+            "To format text",
+            "To manage system hardware"
+        ],
+        answer: 0
+    },
+    {
+        question: "In which programming paradigm do you organize code into procedures?",
+        options: [
+            "Functional Programming",
+            "Object-Oriented Programming",
+            "Procedural Programming"
+        ],
+        answer: 2
+    },
+    {
+        question: "True or False: Assembly language is a high-level programming language.",
+        options: [
+            "True",
+            "False"
+        ],
+        answer: 1
+    },
+    {
+        question: "Which operator is used for 'not equal to' in most programming languages?",
+        options: [
+            "!=",
+            "==",
+            "<>",
+            "!=="
+        ],
+        answer: 0
+    },
+    {
+        question: "What does an interpreter do?",
+        options: [
+            "Converts high-level code into machine code line by line.",
+            "Translates code into a lower-level language all at once.",
+            "Formats and checks syntax."
+        ],
+        answer: 0
+    },
+    {
+        question: "What does 'OOP' stand for in programming?",
+        options: [
+            "Object-Oriented Programming",
+            "Object-Oriented Processing",
+            "Operational Optimization"
+        ],
+        answer: 0
+    },
+    {
+        question: "True or False: A flowchart is a textual representation of an algorithm.",
+        options: [
+            "True",
+            "False"
+        ],
+        answer: 1
+    },
+    {
+        question: "What is a common use of pseudocode?",
+        options: [
+            "Describing algorithms in an easy-to-understand format",
+            "Compiling code",
+            "Executing programs"
+        ],
+        answer: 0
+    },
+    {
+        question: "Which of the following is a feature of functional programming?",
+        options: [
+            "Emphasizing the use of functions to solve problems",
+            "Encapsulating data in objects",
+            "Organizing code into procedures"
+        ],
+        answer: 0
+    },
+    {
+        question: "True or False: Python is a low-level programming language.",
+        options: [
+            "True",
+            "False"
+        ],
+        answer: 1
+    },
+    {
+        question: "Which of these is an example of a system software?",
+        options: [
+            "Operating System",
+            "Web Browser",
+            "Spreadsheet Software"
+        ],
+        answer: 0
+    },
+    {
+        question: "What is the primary focus of procedural programming?",
+        options: [
+            "Sequence of steps to execute a program",
+            "Objects and classes",
+            "Mathematical functions"
+        ],
+        answer: 0
+    },
+    {
+        question: "Which term refers to the ability of a programming language to perform a wide range of operations?",
+        options: [
+            "Versatility",
+            "Efficiency",
+            "Complexity"
+        ],
+        answer: 0
+    },
+    {
+        question: "True or False: Integrated Development Environments (IDEs) are only used for a single programming language.",
+        options: [
+            "True",
+            "False"
+        ],
+        answer: 1
+    },
+    {
+        question: "Which of the following is NOT a characteristic of high-level languages?",
+        options: [
+            "Close to machine code",
+            "Easy to read and write",
+            "Abstracts hardware details"
+        ],
+        answer: 0
+    },
+    {
+        question: "In Object-Oriented Programming, what is 'inheritance'?",
+        options: [
+            "A mechanism to create new classes based on existing ones",
+            "A way to optimize code performance",
+            "A method of error handling"
+        ],
+        answer: 0
+    },
+    {
+        question: "Which operator is used to perform addition in most programming languages?",
+        options: [
+            "+",
+            "-",
+            "*",
+            "/"
+        ],
+        answer: 0
+    },
+    {
+        question: "What is 'encapsulation' in Object-Oriented Programming?",
+        options: [
+            "Bundling data and methods into a single unit",
+            "Executing code in sequence",
+            "Creating multiple objects"
+        ],
+        answer: 0
+    },
+    {
+        question: "True or False: Assembly language uses binary code directly.",
+        options: [
+            "True",
+            "False"
+        ],
+        answer: 1
+    },
+    {
+        question: "What does 'IDE' stand for?",
+        options: [
+            "Integrated Development Environment",
+            "Internal Development Environment",
+            "Interactive Data Editor"
+        ],
+        answer: 0
+    },
+    {
+        question: "Which programming language is known for its use in web development?",
+        options: [
+            "JavaScript",
+            "C++",
+            "Fortran"
+        ],
+        answer: 0
+    },
+    {
+        question: "True or False: Machine language is a type of high-level programming language.",
+        options: [
+            "True",
+            "False"
+        ],
+        answer: 1
+    },
+    {
+        question: "What does the 'syntax' of a programming language define?",
+        options: [
+            "Rules for combining symbols into valid statements",
+            "How to execute a program",
+            "The physical structure of a computer"
+        ],
+        answer: 0
+    },
+    {
+        question: "Which of these is a commonly used programming language for data analysis?",
+        options: [
+            "Python",
+            "HTML",
+            "CSS"
+        ],
+        answer: 0
+    },
+    {
+        question: "What is a common use of a 'flowchart'?",
+        options: [
+            "To visually represent an algorithm",
+            "To compile code",
+            "To execute machine instructions"
+        ],
+        answer: 0
+    },
+    {
+        question: "True or False: 'Python' is a low-level language used for system programming.",
+        options: [
+            "True",
+            "False"
+        ],
+        answer: 1
+    },
+    {
+        question: "Which of these is a true statement about high-level languages?",
+        options: [
+            "They are easy to understand and write.",
+            "They are directly executed by the CPU.",
+            "They provide low-level hardware control."
+        ],
+        answer: 0
+    },
+    {
+        question: "What is the purpose of a 'library' in programming?",
+        options: [
+            "To provide pre-built functions and objects",
+            "To store user data",
+            "To manage system resources"
+        ],
+        answer: 0
+    },
+    {
+        question: "True or False: Functional programming focuses on the use of functions and avoids side effects.",
+        options: [
+            "True",
+            "False"
+        ],
+        answer: 0
+    },
+    {
+        question: "Which programming concept focuses on creating reusable code blocks?",
+        options: [
+            "Procedural Programming",
+            "Functional Programming",
+            "Object-Oriented Programming"
+        ],
+        answer: 2
+    },
+    {
+        question: "Which of these is an example of a low-level programming language?",
+        options: [
+            "C",
+            "Java",
+            "Assembly Language"
+        ],
+        answer: 2
+    },
+    {
+        question: "What does 'pseudocode' help with?",
+        options: [
+            "Describing algorithms in an easy-to-understand manner",
+            "Writing machine code",
+            "Executing code"
+        ],
+        answer: 0
+    },
+    {
+        question: "True or False: JavaScript is a language used for server-side programming only.",
+        options: [
+            "True",
+            "False"
+        ],
+        answer: 1
+    },
+    {
+        question: "Which operator is used for multiplication in programming?",
+        options: [
+            "*",
+            "/",
+            "+",
+            "-"
+        ],
+        answer: 0
+    },
+    {
+        question: "In which paradigm is 'inheritance' a key feature?",
+        options: [
+            "Procedural Programming",
+            "Object-Oriented Programming",
+            "Functional Programming"
+        ],
+        answer: 1
+    },
+    {
+        question: "What does an 'assembler' do?",
+        options: [
+            "Converts assembly code to machine code",
+            "Executes high-level code directly",
+            "Formats code"
+        ],
+        answer: 0
+    }
+];
+
+
+let selectedAnswers = new Array(quizData.length).fill(null);
+
+function loadQuiz() {
+    const quizDiv = document.getElementById('quiz');
+    quizDiv.innerHTML = '';
+    quizData.forEach((data, index) => {
+        const questionEl = document.createElement('div');
+        questionEl.classList.add('question');
+        questionEl.textContent = `${index + 1}. ${data.question}`;
+        
+        const optionsEl = document.createElement('ul');
+        optionsEl.classList.add('options');
+
+        data.options.forEach((option, i) => {
+            const optionEl = document.createElement('li');
+            optionEl.textContent = option;
+            optionEl.dataset.questionIndex = index;
+            optionEl.dataset.optionIndex = i;
+            optionEl.addEventListener('click', selectAnswer);
+            optionsEl.appendChild(optionEl);
+        });
+
+        quizDiv.appendChild(questionEl);
+        quizDiv.appendChild(optionsEl);
+    });
+}
+
+function selectAnswer(event) {
+    const questionIndex = event.target.dataset.questionIndex;
+    const optionIndex = event.target.dataset.optionIndex;
+
+    selectedAnswers[questionIndex] = parseInt(optionIndex);
+
+    const optionsEls = event.target.parentNode.querySelectorAll('li');
+    optionsEls.forEach(optionEl => optionEl.classList.remove('selected'));
+    event.target.classList.add('selected');
+}
+
+function showResults() {
+    const optionsEls = document.querySelectorAll('.options li');
+    optionsEls.forEach(optionEl => {
+        const questionIndex = optionEl.dataset.questionIndex;
+        const optionIndex = optionEl.dataset.optionIndex;
+
+        if (parseInt(optionIndex) === quizData[questionIndex].answer) {
+            optionEl.classList.add('correct');
+        } else if (selectedAnswers[questionIndex] === parseInt(optionIndex)) {
+            optionEl.classList.add('wrong');
+        }
+    });
+
+    const score = selectedAnswers.reduce((total, answer, index) => {
+        return total + (answer === quizData[index].answer ? 1 : 0);
+    }, 0);
+
+    const resultDiv = document.getElementById('result');
+    resultDiv.textContent = `You scored ${score} out of ${quizData.length}`;
+    document.getElementById('submit').style.display = 'none';
+    document.getElementById('retry').style.display = 'inline-block';
+}
+
+function retryQuiz() {
+    selectedAnswers.fill(null);
+    document.getElementById('submit').style.display = 'inline-block';
+    document.getElementById('retry').style.display = 'none';
+    document.getElementById('result').textContent = '';
+    loadQuiz();
+}
+
+document.getElementById('submit').addEventListener('click', showResults);
+document.getElementById('retry').addEventListener('click', retryQuiz);
+
+loadQuiz();
+</script>
+
+</body>
+</html>
